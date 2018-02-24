@@ -48,4 +48,33 @@ They are numerous advantages to this approach:
 - Cover the scope of all possible inputs: it does not limit itself to restricted set of inputs and can cover the whole range of strings, integers or whatever type required for the system to be tested.
 - Shrink the input in case of failure: whenever it fails, the framework (it is the case in all the frameworks I tested so far), try to reduce the input to a smaller input. For instance: if the condition of the failure is the presence of a given character in a string it should return the string having only this precise character
 
-## 
+## Shrinking through example
+
+In order to get a better understanding of shrinking I will develop a bit more the example described above. Full code example is available at https://github.com/dubzzz/fast-check/tree/master/example/contains
+
+The property we wanted to check was the following:
+
+    for all (a, b, c) strings
+    the concatenation of a, b and c always contains b
+
+Let's assume we have a function called `contains` doing the check. In [fast-check](https://github.com/dubzzz/fast-check) we would simply write:
+
+```js
+const fc = require('fast-check');
+
+fc.assert(
+    fc.property(
+            fc.string(), fc.string(), fc.string(),
+            (a, b, c) => contains(b, a+b+c))
+);
+```
+
+We can easily have a look to the produced strings using `fc.sample` as follow:
+
+```js
+fc.sample(
+    fc.property(
+            fc.string(), fc.string(), fc.string(),
+            (a, b, c) => contains(b, a+b+c))
+);
+```
