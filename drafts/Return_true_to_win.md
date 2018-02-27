@@ -9,7 +9,7 @@ A proof of concept based on [fast-check](https://github.com/dubzzz/fast-check) f
 
 ## Property based testing
 
-Property based testing originally borned for testing reasons. Its purpose is to find out values that makes a property fail. A property can be described as any statement like:
+Property based testing originally born for testing reasons. Its purpose is to find out values that makes a property fail. A property can be described as any statement like:
 
     Given inputs satisfying a pre-requisite,
     The statement is true
