@@ -5,6 +5,8 @@ This article focuses on applying property based testing to solve such problems.
 
 Examples of such puzzles are available at: https://alf.nu/ReturnTrue
 
+A proof of concept based on [fast-check](https://github.com/dubzzz/fast-check) framework is available at https://github.com/dubzzz/breaking-return-true-to-win/tree/master
+
 ## Property based testing
 
 Property based testing originally born for testing reasons. Its purpose is to find out values that makes a property fail. A property can be described as any statement like:
