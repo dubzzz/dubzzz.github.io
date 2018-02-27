@@ -1,7 +1,7 @@
 # Breaking down *return true to win* using properties
 
 The idea of *return true to win* exercises is to build a value such as a given function returns `true`. Values can be of any types but can also be restricted to objects, arrays, functions depending on the problem statement. 
-This article focuses on applying property based testing to solve such problems. It will keep restricted to puzzles with no fancy prototype or functions with internal states.
+This article focuses on applying property based testing to solve such problems.
 
 Examples of such puzzles are available at: https://alf.nu/ReturnTrue
 
