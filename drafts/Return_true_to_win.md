@@ -18,18 +18,17 @@ Whenever a failing input is encountered, the framework shrinks it to the minimal
 
 ## Application to *return true to win*
   
-'Return true to win' statements can easily be switched to a property based testing statement.
+*Return true to win* statements can easily be switched to a property based testing statement.
 
 Let's take the following example:
 
 Find a JavaScript expression such as: `x == !x`
 
- 
 Instead of looking for falsy values we look for truthy ones. So we just have to take the negative and we get the corresponding property.
 
 ## Implementation
 
-Given that, implementation using [fast-check](https://github.com/dubzzz/fast-check) is quite straight forward. Our implementation could have been the following:
+Given that, implementation using [fast-check](https://github.com/dubzzz/fast-check) is quite straight forward. For instance, our implementation could have been the following:
 
 ```js
 function negationEqualsOriginal(x) {
@@ -43,10 +42,10 @@ fc.assert(
 );
 ```
 
-Let's take the usage of fast-check line by line:
+Let's take a look at this implementation a bit closer:
 - `fc.assert` is responsible to execute the property multiple times in an attempt to check for potential issues. It also handles the shrinking part in order to output values as small as possible (no need to have an object with hundreds of keys, if a single key makes it fail)
-- ‎`fc.property` declares the property, in terms of what it takes for input and how to assess it worked properly
-- `‎fc.anything()` is an arbitrary object, it is responsible to generate any possible object or primitive. We can use multiple arbitraries for a same property just by putting them directly after the first one
+- `fc.property` declares the property in terms of what it takes for input and how to assess it worked properly
+- `fc.anything()` is an arbitrary object, it is responsible to generate any possible object or primitive. We can use multiple arbitraries for a same property just by putting them directly after the first one. For more details on this, have a look to the [documentation of fast-check](https://github.com/dubzzz/fast-check/blob/master/README.md)
 - `x => ! negationEqualsOriginal(x)` is the predicate that the framework expect to see always true. In our case we want it to find the case where it becomes falsy
 
 What about shrinking?
@@ -70,6 +69,6 @@ And replace `x => ! negationEqualsOriginal(x)` by `x => wrapIt(negationEqualsOri
 
 ## Conclusion
 
-Using this technic we can easily solve problems that require to find out structures such as arrays, strings or objects. Making it work for example with functions or manipulations of types through the usage of prototype would require more work and the creation of adapted arbitraries to generate the inputs.
+Using this technic we can easily solve problems that require to find out structures such as arrays, strings or objects. Making it work for examples with functions or manipulations of types through the usage of prototype would require more work and the creation of adapted arbitraries to generate the inputs.
 
-The full code is available on https://github.com/dubzzz/breaking-return-true-to-win
+The proof of concept is available on https://github.com/dubzzz/breaking-return-true-to-win
