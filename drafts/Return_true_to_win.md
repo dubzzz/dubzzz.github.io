@@ -9,12 +9,12 @@ A proof of concept based on [fast-check](https://github.com/dubzzz/fast-check) f
 
 ## Property based testing
 
-Property based testing originally born for testing reasons. Its purpose is to find out values that makes a property fail. A property can be described as any statement like:
+Property based testing originally born for testing reasons. Its purpose is to find out values that make a property fail. A property can be described as any statement like:
 
     Given inputs satisfying a pre-requisite,
     The statement is true
 
-Whenever a failing input is encountered, the framework shrinks it to the minimal failing input. It constitutes one of the most important and useful feature of this methodology as it gets automatically rid of all the unnecessary noise surrounding the failing case.
+Whenever a failing input is encountered (ie. the statement is false), the framework shrinks it to the minimal failing input. It constitutes one of the most important and useful feature of this methodology as it gets automatically rid of all the unnecessary noise surrounding the failing case.
 
 ## Application to *return true to win*
   
