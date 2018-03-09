@@ -9,21 +9,6 @@ On the other side, random number generators where the aim is to escape from dete
 By resorting to an example this story aims to convince of the value of such tool.
 It describes the reasons that pushed me to write my own [pure PRNG library for JavaScript and TypeScript](https://github.com/dubzzz/pure-rand).
 
-## Pure random generator
-
-Before going further, let's just see how they look like.
-
-A pure random generator* can be seen as a generator able to produce only a single value along with the next generator (for the next random number).
-It's signature might look like:
-
-```typescript
-interface RandomGenerator {
-    next(): [number, RandomGenerator]
-}
-```
-
-*pure random generator: not to be interpreted as a PRNG (pseudo random number generator)
-
 ## Diving into the example
 
 The project we are working on is: building a tic tac toe game for a single player against an IA.
@@ -110,3 +95,29 @@ Indeed, we just have to cancel, play a different move, cancel again and replay t
 Moreover, the whole debugging process described above becomes a nightmare as it has to keep in mind all the cancelations and replays that occurred. Indeed if you take a look to the line `2, ['0-1', '1-1'] // player played 0-1, IA played 1-1` you should see that it is the second time that the PRNG has been called while its only the first move of the IA.
 
 Another solution or workaround to solve this whole problem, would be to re-seed the generator and replay all the moves from the very beginning each time we cancel. It should work, but the more we played steps the more it will take time to cancel one.
+
+## Pure random generator
+
+Before going further, let's just see how a pure random generator looks like.
+It can be seen as a generator able to produce only a single value along with the next generator (for the next random number).
+It's signature might look like:
+
+```typescript
+interface RandomGenerator {
+    next(): [number, RandomGenerator]
+}
+```
+
+If we apply it to the problem above we might be able to fix our problem more easily.
+Indeed instead of keeping possible futures, we just have to store the generator along all the moves.
+The game management might look like this:
+
+```javascript
+// Game State: all prng, all moves
+[]            []             // no one played
+[prng1, prng2]['0-0', '0-1'] // player played 0-0, IA played 0-1
+[]            []             // player canceled, we keep track of the steps just in case it played the same
+[prng1, prng3]['0-1', '1-1'] // player played 0-1, IA played 1-1
+[]            []             // player canceled, we keep track of the steps just in case it played the same
+[prng1, prng2]['0-0', '0-1'] // player played 0-0 again, we ask a new random value to the PRNG
+```
