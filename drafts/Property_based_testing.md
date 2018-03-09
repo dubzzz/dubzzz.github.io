@@ -86,6 +86,13 @@ fc.sample(
 );
 ```
 
-You might get something like this:
+You might get generated inputs like:
 
-
+```
+{"a":"=]n#","b":"bs;","c":",r="}
+{"a":"CTh7kqc0<","b":"Lr/U+1L`MV","c":"''"}
+{"a":"v3.=^>~GS","b":"","c":"0"}
+{"a":"","b":"3i","c":"#AP"}
+{"a":"N!dAvi","b":"[p23lh","c":"e"}
+...
+```
