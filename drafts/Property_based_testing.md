@@ -151,3 +151,4 @@ I highly recommend that you give it a try on some snippets.
 
 By using it you will see how simply it can diagnose and find issues in code.
 A next story should come soon to provide useful hints concerning how you can find efficient properties for your algorithms.
+So stay tune and leave a comment if you liked it or have suggestions.
