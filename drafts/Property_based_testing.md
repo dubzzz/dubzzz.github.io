@@ -9,7 +9,7 @@ In order to introduce property based testing, this article will use [fast-check]
 Multiple ways are currently used in the industry in order to prove the correctness of a code.
 
 Here are some of those technics:
-- static code analysis: It provides useful hints on potential harmful usages of the language. It can prove very useful in typed langages by raising flags when it encounters an issue.
+- static code analysis: It provides useful hints on potential harmful usages of the language. It can prove very useful in typed languages by raising flags when it encounters an issue.
 - example-based testing: It is certainly the most widespread way of testing. It relies on the fact that for a given set of inputs, the algorithm should produce an already known output. It goes far beyond unit tests as this method can also be part of integration, QA-testing...
 - proved code: It proves the code mathematically by checking one by one, loop by loop that all the invariants stay true whatever the provided values.
 - crash under random: It tends to make a program crash under random inputs - Monkey Testing - or random data - Fuzzing.
@@ -72,7 +72,7 @@ fc.assert(
 ```
 
 Where:
-- `fc.assert(<property>(, parameters))`: It executes the test and check that the property stay true for all the `a, b, c` strings produced by the framework. In case of failure, it shrinks the input to the minimal failing example to help the user during its analysis. By default, it runs the property against 100 generated inputs.
+- `fc.assert(<property>(, parameters))`: It executes the test and checks that the property stays true for all the `a, b, c` strings produced by the framework. In case of failure, it shrinks the input to the minimal failing example to help the user during its analysis. By default, it runs the property against 100 generated inputs.
 - `fc.property(<...arbitraries>, <predicate>)`: It describes the property. `arbitraries` are the instances responsible to build the inputs while `predicate` is the function doing the test against those inputs. `predicate` should either return a `boolean` or just does not return anything and just throw in case of issue.
 - `fc.string()`: It is an arbitrary able to generate and shrink random strings.
 
@@ -137,3 +137,17 @@ Basically I adopted a black-box technic to test it against the most simple prope
 While my implementation was passing all the tests provided by the platform, it contained a bug. The property based testing was able to find it.
 
 The source code of the example is available at: https://runkit.com/dubzzz/codingame-example
+
+### UI testing
+
+Certainly one of the most surprising usage is to derive it for UI testing.
+I do use it to replace QA checks sometimes and it works pretty well.
+
+For instance I tested a 2048 written in Scala using this technic: https://dubzzz.github.io/scala-2048/
+
+## Conclusion
+
+I highly recommend that you give it a try on some snippets.
+
+By using it you will see how simply it can diagnose and find issues in code.
+A next story should come soon to provide useful hints concerning how you can find efficient properties for your algorithms.
