@@ -72,3 +72,7 @@ And replace `x => ! negationEqualsOriginal(x)` by `x => wrapIt(negationEqualsOri
 Using this technic we can easily solve problems that require to find out structures such as arrays, strings or objects. Making it work for examples with functions or manipulations of types through the usage of prototype would require more work and the creation of adapted arbitraries to generate the inputs.
 
 The proof of concept is available on https://github.com/dubzzz/breaking-return-true-to-win
+
+## Published on...
+
+https://medium.com/@nicolasdubien/breaking-down-return-true-to-win-using-properties-1e2a3eac2a80
