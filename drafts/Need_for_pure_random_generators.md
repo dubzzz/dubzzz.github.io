@@ -26,14 +26,12 @@ interface RandomGenerator {
 
 ## Diving into the example
 
-Now that we have all the basic notions in mind (at least the names), let's try to see how we might apply them to following programming problem:
-
 The project we are working on is: building a tic tac toe game for a single player against an IA.
 Our IA is very basic, it acts by choosing at random one of the remaining cells of the grid.
 We are really proud of our project but we already experienced multiple issues while trying to reproduce failing cases.
 
 One of the main problem with random is that by definition it should not be predictible.
-Hopefully computer science have what is called pseudo random number generators or PRNG.
+Hopefully computer science has pseudo random number generators or PRNG.
 Those generators provide what seems to be perfectly random except that behind the hood they just do very deterministic operations.
 A very simple PRNG might look like:
 
@@ -50,87 +48,65 @@ class Random {
 }
 ```
 
+Even if they look very simple and too predictible, PRNG are really powerful.
+The one above is really a too simple one but some PRNG are used for cryptography or security issues.
+The latest are called cryptographic pseudo random generator or CPRNG.
+
+For even greater entropy but no predictibility at all, there are hardware random generators.
+They provide random based on the entropy of the system and its environment (mouse move, temperature, pressure...).
+Their output is theoretically unpredictable at all and cannot be seeded in any mean.
+They are definitely not a good candidate to help us in investigating the issues we described above: not able to reproduce the problem.
+
+PRNG on the other hand and perfectly adapted to help us.
+Given we refactored our code to use one of these we should be able to replay a game state.
+In order to replay, we should be provided with the set of all moves done by the player and the initial seed.
+Most of programming languages offer a random class that can be seeded easily.
+
 ## Going pure
 
+Now that we have unlocked a way to reproduce our games, we want to go a bit further and start adding new features in the game.
+The main feature we want to add is a simple undo-redo mechanism with unlimited number of undos.
 
+In a way the implementation looks pretty simple.
+We just have to cancel both IA and player move and it works fine.
 
-## ... draft ...
+In reality it does not work so well.
+For instance, if we cancel a move and replay the same move we reach (possibly) another state.
+Indeed each time call `next` method on classical PRNG we get another random value.
+The only property we have is that the whole generated sequence will always be the same for one seed.
 
-### Overview
+```javascript
+// Game State: all moves
+[]             // no one played
+['0-0', '0-1'] // player played 0-0, IA played 0-1
+[]             // player canceled
+['0-0', '2-1'] // player played 0-0 again, we ask a new random value to the PRNG
+```
 
-Except if we plan running the game for online gambling or e-sports, a simple random generator should be enough. But what if, while testing your game a beta tester encounter an unexpected behavior? How would you be able to understand exactly what went wrong?
+So we have in a way to keep track of what was generated.
+A clever developer might come with the idea: OK while the player does not change its mind by doing a really different move we just keep the steps we went by.
 
+```javascript
+// Game State: num moves, all moves
+0, []             // no one played
+2, ['0-0', '0-1'] // player played 0-0, IA played 0-1
+0, ['0-0', '0-1'] // player canceled, we keep track of the steps just in case it played the same
+2, ['0-0', '0-1'] // player played 0-0 again, we just take what we computed previously for IA
+```
 
-## Zoom on PRNG
+In reality it only postpone the problem. It makes it even more difficult to analyze.
+Indeed, we just have to cancel, play a different move, cancel again and replay the first move to change the state again.
 
-PRNG are very powerful and useful for developers. They provide what seems to be perfectly random except that behind the hood they just do very deterministic operations. A very simple PRNG might look like:
+```javascript
+// Game State: num moves, all moves
+0, []             // no one played
+2, ['0-0', '0-1'] // player played 0-0, IA played 0-1
+0, ['0-0', '0-1'] // player canceled, we keep track of the steps just in case it played the same
+2, ['0-1', '1-1'] // player played 0-1, IA played 1-1
+0, ['0-1', '1-1'] // player canceled, we keep track of the steps just in case it played the same
+2, ['0-0', '2-1'] // player played 0-0 again, we ask a new random value to the PRNG
+```
 
-class Random {
-constructor(seed) {this.last = seed;}
-nextInt (from, to) {
-const v = this.last % (to - from +1) +from;
-‎this.last = (97 * this.last + 11) % 997;
-‎return v;
-};
+Moreover, the whole debugging process described above becomes a nightmare as it has to keep in mind all the cancelations and replays that occurred. Indeed if you take a look to the line `2, ['0-1', '1-1'] // player played 0-1, IA played 1-1` you should see that it is the second time that the PRNG has been called while its only the first move of the IA.
 
-Which is more or less the implementation of random in Java.
-
-As the generation does not rely on a specific hardware gathering and computing lots of environment characteristics just for one number generation, they are quite efficient in terms of performances while providing quite good quality numbers. They have the ability to reproduce the same sequence of random numbers given the same seed.
-
-That's this feature that makes them so useful.
-
-
-//explain IA behavior
-
-Here PRNG comes, if you were using such generator, knowing the initial seed and the sequence of moves of your player should be enough to reproduce everything.
-
-But they are not enough, we can do even better.
-
-## Purity
-
-Let's say that our marketing team is planning a soaring in the number of daily players if we implement a basic cancel operation.
-
-In a way the implementation looks pretty simple. We just have to cancel both IA and player move and it works.
-
-Not really because if we cancel a move and replay the same move we reach (possibly) another state. On clever developer might come with the idea: OK while the player does not change its mind by doing a really different move we just keep a pointer to the state we computed and canceled.
-
-But the problem is still there. We just have to cancel, play a different move, cancel again and replay the first move to change the state again. Moreover, the whole debugging process described above becomes a nightmare as it has to keep in mind all the cancelations and replays that occurred.
-
-The other solution might be to re seed the generator and replay all the moves from the very beginning each time we cancel. It will work for a tic tac toe but not really for other problems.
-
-The clé de voûte is pure PRNG.
-
-
-//text editor, cancel, redo
-
-### PRNG a nice tool
-
-While choosing the right number generator for a given project is important, it's also important to note that the more random they are, the more costly in terms of access time they might be.
-
-Some questions you may ask yourself when choosing one are:
-
-- Am I writing a program dealing with security, secrets or cryptography?
-
-In this case, a CPRNG might be enough depending on the constraints you have.
-
-- ‎Is it problematic if a user succeed in predicting the next random value?
-
-For instance, if you were building an online poker platform, it might be a good choice not to take a too simple and predictable PRNG for production code (eg. : not the random of Java). Indeed a player might discover the seed and break down the sequence.
-
-Except for really critical sections (or to seed a PRNG), you should definitely look into either a CPRNG or a PRNG.
-
-And even in those sections, you might opt for a PRNG when running your units, end to end or integration tests. Indeed reproducible tests are always a good idea.
-
-## depreciated -- Quick overview of Random
-
-Random is a must have for lots of programming problems ranging from game design to security.
-
-It is also a tough question raising lots of possible concerns:
-- unpredictable
-- unreproducible
-- untestable
-
-And coming with multiple options:
-- hardware random: provide random based on the entropy of the system and its environment (mouse move, temperature, pressure...). The output is theoretically unpredictable at all
-- pseudo random number generator often called PRNG: given an initial seed, a set of arithmetic operations derives it to random sequences which look random but can be reproduced by running it again against the same seed
-- cryptographic pseudo random generator often called CPRNG: more secure than prng they provide a prng ready for cryptographic problems
+Another solution or workaround to solve this whole problem, would be to re-seed the generator and replay all the moves from the very beginning each time we cancel. It should work, but the more we played steps the more it will take time to cancel one.
