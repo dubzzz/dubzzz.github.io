@@ -2,7 +2,7 @@
 
 Property based testing has become quite famous in functional world. Mainly introduced by `QuickCheck` framework in `Haskell`, it suggests another way to test software. It targets all the scope covered by example based testing: from unit tests to integration tests.
 
-In order to introduce property based testing, this article will use [fast-check](https://github.com/dubzzz/fast-check) framework written for JavaScript and TypeScript testing but examples can easily be converted for other frameworks. Links towards C++ snippets using [RapidCheck](https://github.com/emil-e/rapidcheck/) will also be provided.
+In order to introduce property based testing, this article will use [fast-check](https://github.com/dubzzz/fast-check) framework written for JavaScript and TypeScript testing but examples can easily be converted for other frameworks.
 
 ## Existing ways
 
@@ -119,3 +119,21 @@ The framework will generate multiple inputs and as soon as it finds a failing ca
 {"a":"","b":" ","c":""} // the last failing case
 {"a":"","b":"","c":""}
 ```
+
+## Going further
+
+Property based testing is a useful and powerful tool. I used it for multiple problems going from testing famous npm repositories to personal snippets. Here are some of the interesting topics I covered with this kind of tool.
+
+### Bug in famous npm packages: js-yaml
+
+While [js-yaml](https://www.npmjs.com/package/js-yaml) is a 1 million downloads per day package, property based testing was able to find a problem in it. The story is available at https://github.com/nodeca/js-yaml/pull/398 and the test at https://runkit.com/dubzzz/multiple-properties-for-js-yaml
+
+Basically I adopted a black-box technic to test it against the most simple property possible: whatever the object I convert into yaml, I should be able to have it back by reading the generated yaml.
+
+### Scenario not covered by units
+
+[Shadows of the knight](https://www.codingame.com/training/medium/shadows-of-the-knight-episode-1) is a programming puzzle available on [CodinGame](https://www.codingame.com/) platform.
+
+While my implementation was passing all the tests provided by the platform, it contained a bug. The property based testing was able to find it.
+
+The source code of the example is available at: https://runkit.com/dubzzz/codingame-example
