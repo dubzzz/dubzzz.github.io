@@ -52,7 +52,7 @@ It is also important to note that it does not - by any means - replace unit test
 
 ## Shrinking through example
 
-In order to get a better understanding of shrinking I will develop a bit more the example described above. Full code example is available at https://github.com/dubzzz/fast-check/tree/master/example/contains
+In order to get a better understanding of shrinking I will develop a bit more the example described above. Interactive code example is available on RunKit: https://runkit.com/dubzzz/contains-example
 
 The property we wanted to check was the following:
 
@@ -95,4 +95,27 @@ You might get generated inputs like:
 {"a":"","b":"3i","c":"#AP"}
 {"a":"N!dAvi","b":"[p23lh","c":"e"}
 ...
+```
+
+Let's suppose that we have the following implementation of `contains` which obviously does not work:
+
+```javascript
+const contains = (pattern, text) => {
+    return text.substr(1).indexOf(pattern) !== -1;
+};
+```
+
+The framework will generate multiple inputs and as soon as it finds a failing case it will start the shrinking process. If we take the example above, when running it locally I got a first failure for the entry `{"a":"","b":"I?29S\\~","c":""}`, then the shrinking path was the following:
+
+```javascript
+{"a":"","b":"I?29S\\~","c":""} // first failure encountered: start shrinking process
+{"a":"","b":"","c":""}
+{"a":"","b":"9S\\~","c":""}
+{"a":"","b":"","c":""}
+{"a":"","b":"\\~","c":""}
+{"a":"","b":"","c":""}
+{"a":"","b":"~","c":""}
+{"a":"","b":"","c":""}
+{"a":"","b":" ","c":""} // the last failing case
+{"a":"","b":"","c":""}
 ```
