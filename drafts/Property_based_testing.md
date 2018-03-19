@@ -1,6 +1,7 @@
-# Property Based Testing: Another test philosophy
+# What is Property Based Testing?
+## Another test philosophy
 
-Property based testing has become quite famous in functional world. Mainly introduced by `QuickCheck` framework in `Haskell`, it suggests another way to test software. It targets all the scope covered by example based testing: from unit tests to integration tests.
+Property based testing has become quite famous in functional world. Mainly introduced by **QuickCheck** framework in **Haskell**, it suggests another way to test software. It targets all the scope covered by example based testing: from unit tests to integration tests.
 
 In order to introduce property based testing, this article will use [fast-check](https://github.com/dubzzz/fast-check) framework written for JavaScript and TypeScript but examples can easily be converted for other frameworks.
 
@@ -35,10 +36,10 @@ The executor understanding of a property can be summurized as:
 
 |Property   |Executor understanding |
 |-----------|-----------------------|
-|for all    |run it _multiple_ times|
-|(x, y, ...)|generate random inputs based on specified generators|
-|such as precondition(x, y, ...) holds|check pre-conditions (**failure**: go back to previous)|
-|property(x, y, ...) is true|run the test (**failure**: try to shrink the example)|
+|for all    |run it _multiple_ times (usually 100 times)|
+|(x, y, ...)|generate random inputs based on specified generators (x, y, ... specifies the kind of input to be generated)|
+|such as precondition(x, y, ...) holds|check pre-conditions (**failure**: go back to previous, not an error just an invalid entry)|
+|property(x, y, ...) is true|run the test (**failure**: it is a counter-example, try to shrink the example)|
 
 ## Benefits
 
@@ -73,7 +74,7 @@ fc.assert(
 
 Where:
 - `fc.assert(<property>(, parameters))`: It executes the test and checks that the property stays true for all the `a, b, c` strings produced by the framework. In case of failure, it shrinks the input to the minimal failing example to help the user during its analysis. By default, it runs the property against 100 generated inputs.
-- `fc.property(<...arbitraries>, <predicate>)`: It describes the property. `arbitraries` are the instances responsible to build the inputs while `predicate` is the function doing the test against those inputs. `predicate` should either return a `boolean` or just does not return anything and just throw in case of issue.
+- `fc.property(<...arbitraries>, <predicate>)`: It describes the property. `arbitraries` are the instances responsible to build the inputs while `predicate` is the function doing the test against those inputs. `predicate` should either return a `boolean` or not return anything and throw in case of issue.
 - `fc.string()`: It is an arbitrary able to generate and shrink random strings.
 
 If you wonder what are the generated inputs you can replace `fc.assert` by `fc.sample` as follow:
@@ -122,7 +123,7 @@ The framework will generate multiple inputs and as soon as it finds a failing ca
 
 ## Going further
 
-Property based testing is a useful and powerful tool. I used it for multiple problems going from testing famous npm repositories to personal snippets. Here are some of the interesting topics I covered with this kind of tool.
+Property based testing is a useful and powerful tool. I personally used it against multiple problems going from testing famous npm repositories to personal snippets. Here are some of the interesting topics I covered with this kind of tool.
 
 ### Bug in famous npm packages: js-yaml
 
@@ -149,6 +150,6 @@ For instance I tested a 2048 written in Scala using this technic: https://dubzzz
 
 I highly recommend that you give it a try on some snippets.
 
-By using it you will see how simply it can diagnose and find issues in code.
+By using it you will see how simply it can be used to diagnose and find issues.
 A next story should come soon to provide useful hints concerning how you can find efficient properties for your algorithms.
 So stay tune and leave a comment if you liked it or have suggestions.
