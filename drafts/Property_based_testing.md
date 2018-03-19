@@ -32,7 +32,7 @@ Before explaining how a test executor will understand and execute it, here is a 
 
 In other words, without any precise knowledge of the shape and content of the strings `a`, `b` and `c` I can surely say that `b` is a substring of `a + b + c`.
 
-The executor understanding of a property can be summurized as:
+The executor understanding of a property can be summarized as:
 
 |Property   |Executor understanding |
 |-----------|-----------------------|
