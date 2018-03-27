@@ -60,10 +60,9 @@
                 </section>
                 <section>
                     <ul>
-                        <li>Reproducible</li>
-                        <li class="fragment">Straight to corner cases</li>
                         <li class="fragment">Use the scope of all possible inputs</li>
                         <li class="fragment">Shrink the input in case of failure</li>
+                        <li class="fragment">Reproducible</li>
                     </ul>
                 </section>
             </section>
@@ -141,13 +140,20 @@ yaml.safeLoad(yaml.safeDump({toto: 10}, options));
 yaml.safeLoad(yaml.safeDump({toto: -10}, options));
 // produces: {toto: "0b-1010"}
                 </code></pre>
-                <pre class="fragment"><code class="hljs javascript" data-trim>
+            </section>
+            <section>
+                <pre><code class="hljs javascript" data-trim>
 // yamlObject: JavaScript object that can be serialized into YAML
 // options   : Valid options of yaml.safeDump
 assert.deepEqual(
     yaml.safeLoad(yaml.safeDump(yamlObject, options)),
     yamlObject
 );
+
+// Error: Property failed after 5 tests (seed: 1522188073850):
+//  [{"":-1},{"styles":{"!!int":"binary"}}]
+// Got error: AssertionError [ERR_ASSERTION]:
+//  { '': '0b-1' } deepStrictEqual { '': -1 }
                 </code></pre>
             </section>
         </div>
