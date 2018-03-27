@@ -82,6 +82,21 @@ import fc from 'fast-check'
                     Let's suppose that we want to test a stable sort algorithm
                 </section>
                 <section>
+                    <h4>classical way</h4>
+                    
+                    <pre class="fragment"><code class="hljs javascript" data-trim>
+const cmp1 = (a, b) =&gt; a-b;
+assert.deepEqual(mysort([], cmp1), []);
+assert.deepEqual(mysort([1], cmp1), [1]);
+assert.deepEqual(mysort([1,2,42], cmp1), [1,2,42]);
+assert.deepEqual(mysort([42,2,1], cmp1), [1,2,42]);
+assert.deepEqual(mysort([1,1], cmp1), [1,1]);
+
+const cmp2 = (a, b) =&gt; a[0]-b[0];
+assert.deepEqual(mysort([[1,0],[2,1],[1,2]], cmp2), [1,0],[1,2],[2,1]);
+                    </code></pre>
+                </section>
+                <section>
                     <h4>should contain the same items</h4>
                     
                     <pre class="fragment"><code class="hljs javascript" data-trim>
