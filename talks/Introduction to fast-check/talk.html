@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Introduction to Property Based Testing :: using fast-check</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="reveal/reveal.min.css"><!-- https://cdn.jsdelivr.net/reveal.js/3.0.0/css/reveal.min.css -->
+    <link rel="stylesheet" href="reveal/black-patched.css"><!-- https://cdn.jsdelivr.net/reveal.js/3.0.0/css/theme/black.css -->
+    <link rel="stylesheet" href="highlight/atom-one-dark.min.css" id="highlight-css"><!-- https://cdn.jsdelivr.net/reveal.js/3.0.0/lib/css/zenburn.css -->
+    <link rel="stylesheet" href="reveal-style.css">
+  </head>
+  <body>
+    <div class="reveal">
+        <div class="slides">
+            <section>
+                <section>
+                    <h1>Introduction to Property Based Testing</h1>
+                    <h2 class="more">using <a href="https://github.com/dubzzz/fast-check/" target="_blank"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QsHDTYBDQhZnwAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAzklEQVRIx9WWSw7DMAhEM5b3XfUWvf/1JitLVmV+LiQpmyhy4AGGAI4NIcn5HQCiNrADMo06HEEmMOIAqqAWHJVQDY5qqATHFdAVHBp0/tDrlKUzzntmi0SkXZHi1XW24yZpJD9VqZVskHxDSnPWnUr270t1dQVLtp4VcWZ7/ccdXyHQ0vFrkWl2W9UGYul2KcqhOJ7e6N1TbKXwDXf+BkNj02qnl3t5C9aDuIHMUWelebmBaPCMglJ3Lk8b7LbPY4ZEtxR2eznNeY8DESdPzuaaeXqII8gAAAAASUVORK5CYII=" style="border:none;background:none;" /> dubzzz/fast-check</a></h2>
+                </section>
+            </section>
+            <section>
+                <section>
+                    <h3>Property based testing</h3>
+                </section>
+                <section>
+                    Test properties instead of isolated cases
+                </section>
+                <section>
+                    <p class="quote">
+                        for all <em>(x, y, ...)</em>
+                        <br/>such that <em>precondition(x, y, ...)</em> holds
+                        <br/><em>property(x, y, ...)</em> is true
+                    </p>
+                </section>
+                <section>
+                    <p class="flex no-margin" style="border-bottom: dotted 1px white">
+                        <span class="left-column">for all</span>
+                        <span class="right-column fragment" data-fragment-index="6">run it <em>100</em> times</span>
+                    </p>
+                    <p class="flex no-margin" style="border-bottom: dotted 1px white">
+                        <span class="left-column left-padded"><em>(x, y, ...)</em></span>
+                        <span class="right-column left-padded fragment">generate random inputs based on specified generators</span>
+                    </p>
+                    <p class="flex no-margin" style="border-bottom: dotted 1px white">
+                        <span class="left-column left-padded">
+                            such that
+                            <br/><em>precondition(x, y, ...)</em> holds
+                        </span>
+                        <span class="right-column left-padded fragment">
+                            check pre-conditions
+                            <br/><span><em>fails?</em>: go back to previous</span>
+                        </span>
+                    </p>
+                    <p class="flex no-margin">
+                        <span class="left-column left-padded"><em>property(x, y, ...)</em> is true</span>
+                        <span class="right-column left-padded fragment">
+                            run the test
+                            <br/><span><em>fails?</em>: try shrinking</span>
+                        </span>
+                    </p>
+                </section>
+                <section>
+                    <ul>
+                        <li>Reproducible</li>
+                        <li class="fragment">Straight to corner cases</li>
+                        <li class="fragment">Use the scope of all possible inputs</li>
+                        <li class="fragment">Shrink the input in case of failure</li>
+                    </ul>
+                </section>
+            </section>
+            <section>
+                <section>
+                    <h3><a href="https://github.com/dubzzz/fast-check/" target="_blank"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QsHDTYBDQhZnwAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAzklEQVRIx9WWSw7DMAhEM5b3XfUWvf/1JitLVmV+LiQpmyhy4AGGAI4NIcn5HQCiNrADMo06HEEmMOIAqqAWHJVQDY5qqATHFdAVHBp0/tDrlKUzzntmi0SkXZHi1XW24yZpJD9VqZVskHxDSnPWnUr270t1dQVLtp4VcWZ7/ccdXyHQ0vFrkWl2W9UGYul2KcqhOJ7e6N1TbKXwDXf+BkNj02qnl3t5C9aDuIHMUWelebmBaPCMglJ3Lk8b7LbPY4ZEtxR2eznNeY8DESdPzuaaeXqII8gAAAAASUVORK5CYII=" style="border:none;background:none;" /> dubzzz/fast-check</a> in action</h3>
+                </section>
+                <section>
+                    <pre><code class="hljs bash" data-trim>
+npm install fast-check --save-dev
+                    </code></pre>
+                    <pre><code class="hljs bash" data-trim>
+import fc from 'fast-check'
+                    </code></pre>
+                </section>
+                <section>
+                    Let's suppose that we want to test a stable sort algorithm
+                </section>
+                <section>
+                    <h4>should contain the same items</h4>
+                    
+                    <pre class="fragment"><code class="hljs javascript" data-trim>
+fc.assert(
+    fc.property(fc.array(fc.integer()),
+    (data) => {
+        const sorted = mysort(data.slice(0), (a, b) =&gt; a-b);
+        assert.equal(sorted.length, data.length);
+        for (const item of data)
+            assert.equal(count(sorted, item), count(data, item));
+    }
+);
+                    </code></pre>
+                </section>
+                <section>
+                    <h4>should produce ordered array</h4>
+                    <pre class="fragment"><code class="hljs javascript" data-trim>
+fc.assert(
+    fc.property(fc.array(fc.integer()),
+    (data) => {
+        const sorted = mysort(data, (a, b) =&gt; a-b);
+        for (let idx = 1 ; idx &lt; sorted.length ; ++idx)
+            assert.ok(sorted[idx-1] &lt;= sorted[idx]);
+    }
+);
+                    </code></pre>
+                </section>
+                <section>
+                    <h4>should be stable</h4>
+                    <pre class="fragment"><code class="hljs javascript" data-trim>
+fc.assert(
+    fc.property(fc.array(fc.integer()),
+    (data) => {
+        const sorted = mysort(
+                data.map((v, idx) => [v, idx]),
+                (a, b) =&gt; a[0]-b[0]);
+        for (let idx = 1 ; idx &lt; sorted.length ; ++idx)
+            if (sorted[idx-1][0] === sorted[idx][0])
+                assert.ok(sorted[idx-1][1] &lt;= sorted[idx][1]);
+    }
+);
+                    </code></pre>
+                </section>
+            </section>
+            <section>
+                <h1>Questions?</h1>
+                <h3><a href="https://github.com/dubzzz/fast-check/" target="_blank"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QsHDTYBDQhZnwAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAzklEQVRIx9WWSw7DMAhEM5b3XfUWvf/1JitLVmV+LiQpmyhy4AGGAI4NIcn5HQCiNrADMo06HEEmMOIAqqAWHJVQDY5qqATHFdAVHBp0/tDrlKUzzntmi0SkXZHi1XW24yZpJD9VqZVskHxDSnPWnUr270t1dQVLtp4VcWZ7/ccdXyHQ0vFrkWl2W9UGYul2KcqhOJ7e6N1TbKXwDXf+BkNj02qnl3t5C9aDuIHMUWelebmBaPCMglJ3Lk8b7LbPY4ZEtxR2eznNeY8DESdPzuaaeXqII8gAAAAASUVORK5CYII=" style="border:none;background:none;" /> dubzzz/fast-check</a></h3>
+            </section>
+            <section>
+                <pre><code class="hljs javascript" data-trim>
+const options = {styles:{'!!int':'binary'}};
+
+yaml.safeLoad(yaml.safeDump({toto: 10}, options));
+// produces: {toto: 10}
+
+yaml.safeLoad(yaml.safeDump({toto: -10}, options));
+// produces: {toto: "0b-1010"}
+                </code></pre>
+                <pre class="fragment"><code class="hljs javascript" data-trim>
+// yamlObject: JavaScript object that can be serialized into YAML
+// options   : Valid options of yaml.safeDump
+assert.deepEqual(
+    yaml.safeLoad(yaml.safeDump(yamlObject, options)),
+    yamlObject
+);
+                </code></pre>
+            </section>
+        </div>
+    </div>
+    <script src="reveal/head.min.js"></script><!-- https://cdn.jsdelivr.net/reveal.js/3.0.0/lib/js/head.min.js -->
+    <script src="reveal/reveal.min.js"></script><!-- https://cdn.jsdelivr.net/reveal.js/3.0.0/js/reveal.min.js -->
+    <script src="reveal-config.js"></script>
+    <script src="reveal-mouse.js"></script>
+    <script src="reveal-highlight.js"></script>
+  </body>
+</html>
