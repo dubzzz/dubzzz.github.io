@@ -93,8 +93,19 @@ assert.deepEqual(mysort([42,2,1], cmp1), [1,2,42]);
 assert.deepEqual(mysort([1,1], cmp1), [1,1]);
 
 const cmp2 = (a, b) =&gt; a[0]-b[0];
-assert.deepEqual(mysort([[1,0],[2,1],[1,2]], cmp2), [1,0],[1,2],[2,1]);
+assert.deepEqual(
+        mysort([[1,0],[2,1],[1,2]], cmp2),
+        [1,0],[1,2],[2,1]);
                     </code></pre>
+                </section>
+                <section>
+                    <h4>property way</h4>
+                    
+                    <ul>
+                        <li class="fragment">should contain the same items</li>
+                        <li class="fragment">should produce ordered array</li>
+                        <li class="fragment">should be stable</li>
+                    </ul>
                 </section>
                 <section>
                     <h4>should contain the same items</h4>
@@ -146,18 +157,19 @@ fc.assert(
                 <h3><a href="https://github.com/dubzzz/fast-check/" target="_blank"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QsHDTYBDQhZnwAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAAzklEQVRIx9WWSw7DMAhEM5b3XfUWvf/1JitLVmV+LiQpmyhy4AGGAI4NIcn5HQCiNrADMo06HEEmMOIAqqAWHJVQDY5qqATHFdAVHBp0/tDrlKUzzntmi0SkXZHi1XW24yZpJD9VqZVskHxDSnPWnUr270t1dQVLtp4VcWZ7/ccdXyHQ0vFrkWl2W9UGYul2KcqhOJ7e6N1TbKXwDXf+BkNj02qnl3t5C9aDuIHMUWelebmBaPCMglJ3Lk8b7LbPY4ZEtxR2eznNeY8DESdPzuaaeXqII8gAAAAASUVORK5CYII=" style="border:none;background:none;" /> dubzzz/fast-check</a></h3>
             </section>
             <section>
-                <pre><code class="hljs javascript" data-trim>
+                <section>
+                    <pre><code class="hljs javascript" data-trim>
 const options = {styles:{'!!int':'binary'}};
 
-yaml.safeLoad(yaml.safeDump({toto: 10}, options));
-// produces: {toto: 10}
+yaml.safeDump({toto: 10}, options);
+// produces: "toto: 0b1010"
 
-yaml.safeLoad(yaml.safeDump({toto: -10}, options));
-// produces: {toto: "0b-1010"}
-                </code></pre>
-            </section>
-            <section>
-                <pre><code class="hljs javascript" data-trim>
+yaml.safeDump({toto: -10}, options);
+// produces: "toto: 0b-1010"
+                    </code></pre>
+                </section>
+                <section>
+                    <pre><code class="hljs javascript" data-trim>
 // yamlObject: JavaScript object that can be serialized into YAML
 // options   : Valid options of yaml.safeDump
 assert.deepEqual(
@@ -169,7 +181,8 @@ assert.deepEqual(
 //  [{"":-1},{"styles":{"!!int":"binary"}}]
 // Got error: AssertionError [ERR_ASSERTION]:
 //  { '': '0b-1' } deepStrictEqual { '': -1 }
-                </code></pre>
+                    </code></pre>
+                </section>
             </section>
         </div>
     </div>
